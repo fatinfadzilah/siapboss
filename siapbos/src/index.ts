@@ -9,7 +9,6 @@ import memoRoutes from './memo';
 import membersRoutes from './members';
 import projectRoutes from './projects';
 import sendMemoRoutes from './sendPushNotification';
-import notiRoutes from './noti';
 
 dotenv.config();
 
@@ -21,7 +20,7 @@ app.use('/api', memoRoutes);
 app.use('/api', membersRoutes);
 app.use('/api', projectRoutes);
 app.use('/api', sendMemoRoutes);
-app.use('/api', notiRoutes);
+
 
 // AUTH ROUTES
 app.post('/api/login', async (req: Request, res: Response) => {

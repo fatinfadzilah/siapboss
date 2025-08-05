@@ -15,20 +15,3 @@ Color getColorForProject(String name) {
   int hash = name.codeUnits.fold(0, (prev, elem) => prev + elem);
   return colors[hash % colors.length];
 }
-
-Color getColorForMemo(String location) {
-  final corporateColors = <Color>[
-    Color(0xFFE0E0E0), // light grey
-    Color(0xFFB3E5FC), // muted blue
-    Color(0xFFDCEDC8), // soft green
-    Color(0xFFFFF9C4), // light yellow
-    Color(0xFFFFE0B2), // warm peach
-    Color(0xFFD1C4E9), // muted lavender
-    Color(0xFFCFD8DC), // blue-grey
-    Color(0xFFFFCDD2), // soft red
-  ];
-
-
-  int hash = location.codeUnits.fold(0, (prev, elem) => prev + elem);
-  return corporateColors[hash % corporateColors.length];
-}

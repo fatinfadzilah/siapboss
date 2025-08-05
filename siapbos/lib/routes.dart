@@ -46,7 +46,7 @@ GoRouter router(AuthState authState) {
       ),
       GoRoute(
         path: '/user',
-        builder: (context, state) => UserPage(),
+        builder: (context, state) => bottomNavigationBar(),
       ),
       GoRoute(
         path: '/manager',

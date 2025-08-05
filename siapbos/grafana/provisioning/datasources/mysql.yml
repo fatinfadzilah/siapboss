@@ -7,10 +7,10 @@ datasources:
     type: mysql
     access: proxy
     url: mysql:3306
-    database: memo_system
-    user: memo_user
+    database: memo_db
+    user: root
     secureJsonData:
-      password: memo_pass
+      password: root
     isDefault: false
     jsonData:
       maxOpenConns: 100

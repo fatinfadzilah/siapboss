@@ -23,6 +23,7 @@ interface MemoRequest extends Request {
     members?: string[];
   };
 }
+
 //create memo
 router.post('/memo', async (req: MemoRequest, res: Response) => {
   try {
@@ -43,37 +44,41 @@ router.post('/memo', async (req: MemoRequest, res: Response) => {
 
     const formattedTime = masa.length === 5 ? `${masa}:00` : masa;
 
+    // Insert memo
     const [memoResult]: any = await db.execute(
       `INSERT INTO memos (project_id, tarikh, nama_aktiviti, masa, lokasi, keterangan, created_by)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
-        project_id ?? null,
-        tarikh ?? null,
-        nama_aktiviti ?? null,
-        formattedTime ?? null,
-        lokasi ?? '',
-        keterangan ?? '',
-        created_by ?? null,
+        project_id,
+        tarikh,
+        nama_aktiviti,
+        formattedTime,
+        lokasi,
+        keterangan,
+        created_by,
       ]
     );
 
     const memoId = memoResult.insertId;
 
-    // ✅ Insert members and send notifications
+    // Loop for each member
     for (const memberName of members) {
       const [rows]: any = await db.execute(
         `SELECT id, fcm_token FROM users WHERE name = ? LIMIT 1`,
         [memberName]
       );
+
       if (rows.length > 0) {
         const staffId = rows[0].id;
         const fcmToken = rows[0].fcm_token;
 
+        // Insert into memo_staff
         await db.execute(
           `INSERT INTO memo_staff (memo_id, staff_id) VALUES (?, ?)`,
           [memoId, staffId]
         );
 
+        // Send notification
         if (fcmToken) {
           await sendPushNotification(
             fcmToken,
@@ -81,6 +86,16 @@ router.post('/memo', async (req: MemoRequest, res: Response) => {
             `Aktiviti: ${nama_aktiviti} pada ${tarikh} di ${lokasi}`
           );
         }
+
+        // Log notifications table
+        await db.execute(
+          `INSERT INTO notifications (user_id, memo_id, title, message, status)
+           VALUES (?, ?, ?, ?, ?)`,
+          [
+            staffId,
+            memoId,'Memo Baru',`Aktiviti: ${nama_aktiviti} pada ${tarikh} di ${lokasi}`,'sent',
+          ]
+        );
       }
     }
 
@@ -91,7 +106,6 @@ router.post('/memo', async (req: MemoRequest, res: Response) => {
   }
 });
 
-
 router.get('/displaymemo', async (req: Request, res: Response) => {
   try {
     const projectId = req.query.project_id;
@@ -101,7 +115,7 @@ router.get('/displaymemo', async (req: Request, res: Response) => {
     }
 
     const [memoRows]: any = await db.execute(
-      `SELECT m.id, m.nama_aktiviti, m.tarikh, m.masa, m.lokasi,m.keterangan
+      `SELECT m.id, m.nama_aktiviti, m.tarikh, m.masa, m.lokasi,m.keterangan, m.project_id
        FROM memos m
        WHERE m.project_id = ?
        ORDER BY m.tarikh DESC, m.masa DESC`,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:siapbos/utils/color_utils.dart';
 
 class MemoCardWidget extends StatelessWidget {
   final Map<String, dynamic> memo;
@@ -21,7 +20,6 @@ class MemoCardWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: getColorForMemo(location),
         elevation: 4,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: EdgeInsets.symmetric(vertical: 8),

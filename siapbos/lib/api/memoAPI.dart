@@ -102,4 +102,34 @@ class MemoApi {
         }
     }
 
+    static Future<List<Map<String, dynamic>>> getStaffMembersForProject(int projectId) async {
+      final response = await http.get(Uri.parse('$baseUrl/projects/$projectId/staff'));
+      if (response.statusCode == 200) {
+        return List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load staff');
+      }
+    }
+
+    static Future<List<Map<String, dynamic>>> getAvailableStaffForProject(int projectId) async {
+      final response = await http.get(Uri.parse('$baseUrl/projects/$projectId/availableStaff'));
+      if (response.statusCode == 200) {
+        return List<Map<String, dynamic>>.from(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load available staff');
+      }
+    }
+
+    static Future<void> assignStaffToProject(int projectId, List<int> staffIds) async {
+      final response = await http.post(
+        Uri.parse('$baseUrl/projects/$projectId/staff'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'staffIds': staffIds}),
+      );
+      if (response.statusCode != 200) {
+        throw Exception('Failed to assign staff');
+      }
+    }
+
+
 }
