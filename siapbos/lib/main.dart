@@ -6,12 +6,13 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:siapbos/provider/authProvider.dart';
 import 'package:siapbos/routes.dart';
-import 'package:siapbos/widget/notificationService.dart';
+import 'firebase_options.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('ms', null); 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await FirebaseMessaging.instance.requestPermission();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler); 
   runApp(
@@ -36,7 +37,6 @@ class _MyAppState extends State<MyApp> {
    @override
   void initState() {
     super.initState();
-    setupFCM();
   }
 
   @override

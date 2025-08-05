@@ -1,23 +1,47 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-void setupFCM() async {
-  try {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+class NotificationService {
+  static final _firebaseMessaging = FirebaseMessaging.instance;
+  static final _localNotifications = FlutterLocalNotificationsPlugin();
 
-    await messaging.requestPermission();
+  static Future<void> initialize() async {
+    // iOS permission
+    await _firebaseMessaging.requestPermission();
 
-    String? token = await messaging.getToken();
-    print('🔑 FCM Token: $token');
+    // Android foreground notification
+    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const initSettings = InitializationSettings(android: androidSettings);
+    await _localNotifications.initialize(initSettings);
 
+    // Foreground message
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('📩 New notification: ${message.notification?.title}');
+      if (message.notification != null) {
+        _showNotification(message);
+      }
     });
+  }
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('📲 User opened notification');
-    });
-  } catch (e) {
-    print('⚠️ FCM setup failed: $e');
+  static void _showNotification(RemoteMessage message) {
+    final notification = message.notification;
+    if (notification != null) {
+      _localNotifications.show(
+        message.hashCode,
+        notification.title,
+        notification.body,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'memo_channel',
+            'Memo Notifications',
+            importance: Importance.max,
+            priority: Priority.high,
+          ),
+        ),
+      );
+    }
+  }
+
+  static Future<String?> getToken() async {
+    return await _firebaseMessaging.getToken();
   }
 }
-

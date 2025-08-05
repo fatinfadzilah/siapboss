@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "84787006749",
-    "project_id": "memozapp-8458c",
-    "storage_bucket": "memozapp-8458c.firebasestorage.app"
+    "project_number": "674351092992",
+    "project_id": "push-noti-siapbos",
+    "storage_bucket": "push-noti-siapbos.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:84787006749:android:4e90ed6c9d01ab90ffa5f4",
+        "mobilesdk_app_id": "1:674351092992:android:37b06c4716549047af8fe5",
         "android_client_info": {
           "package_name": "com.hackathon.siapbos"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAKO9zVuUwC281oqWZ7-cFh5_vT1MdGN1A"
+          "current_key": "AIzaSyAE-ZGcb7fjHKQtP_C4pRiuinyof4epCR4"
         }
       ],
       "services": {
